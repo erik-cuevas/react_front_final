@@ -1,5 +1,5 @@
 // src/pages/ContactUs.tsx
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 
 interface Contacto {
   nombre: string;
