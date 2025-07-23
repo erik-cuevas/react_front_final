@@ -20,23 +20,25 @@ export default function ContactUs() {
 
   const [contactos, setContactos] = useState<Contacto[]>([]);
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setForm({ ...form, [e.target.id]: e.target.value });
+  };
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setContactos([...contactos, form]);
     setForm({ nombre: '', telefono: '', email: '', pais: '', mensaje: '' });
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setForm({ ...form, [e.target.id]: e.target.value });
-  };
-
   return (
-    <section className="container my-5">
+    <div className="container my-5">
+      <h2 className="text-center mb-5">Contáctanos</h2>
       <div className="row">
+        {/* Formulario */}
         <div className="col-lg-6 mb-4">
           <div className="card shadow-sm h-100">
             <div className="card-body">
-              <h3 className="card-title mb-4 text-center">Contáctanos</h3>
+              <h3 className="card-title mb-4 text-center">Formulario de contacto</h3>
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
                   <label htmlFor="nombre">Nombre</label>
@@ -69,47 +71,70 @@ export default function ContactUs() {
           </div>
         </div>
 
-        <div className="col-lg-6">
+        {/* Mapa */}
+        <div className="col-lg-6 mb-4">
           <div className="card shadow-sm h-100">
             <div className="card-body">
-              <h3 className="text-center">Ubicación</h3>
-              <div style={{ borderRadius: '1rem', overflow: 'hidden' }}>
+              <h3 className="text-center mb-4">Ubicación</h3>
+              <div style={{ borderRadius: '1rem', overflow: 'hidden', boxShadow: '0 4px 24px rgba(37,99,235,0.10)' }}>
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d9400.81026387084!2d-70.5865687323325!3d-33.58744027889228"
-                  width="100%" height="370" frameBorder={0} style={{ border: 0 }} allowFullScreen
-                  loading="lazy" title="Ubicación">
-                </iframe>
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d9400.81026387084!2d-70.5865687323325!3d-33.58744027889228!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662d718a032972d%3A0x45da5699698e2261!2sINACAP%20Puente%20Alto!5e0!3m2!1ses-419!2scl!4v1750546825843!5m2!1ses-419!2scl"
+                  width="100%"
+                  height="370"
+                  style={{ border: 0 }}
+                  loading="lazy"
+                  allowFullScreen
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Ubicación INACAP"
+                ></iframe>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <div className="col-md-12 mt-5">
-          <h4>Contactos guardados</h4>
-          <table className="table table-striped">
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Teléfono</th>
-                <th>Email</th>
-                <th>País</th>
-                <th>Mensaje</th>
-              </tr>
-            </thead>
-            <tbody>
-              {contactos.map((c, i) => (
-                <tr key={i}>
-                  <td>{c.nombre}</td>
-                  <td>{c.telefono}</td>
-                  <td>{c.email}</td>
-                  <td>{c.pais}</td>
-                  <td>{c.mensaje}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {/* Tabla de contactos */}
+      <div className="row mt-4">
+        <div className="col-12">
+          <div className="card shadow-sm">
+            <div className="card-body">
+              <h4 className="mb-3">Contactos guardados</h4>
+              <div className="table-responsive">
+                <table className="table table-striped">
+                  <thead className="thead-dark">
+                    <tr>
+                      <th>Nombre</th>
+                      <th>Teléfono</th>
+                      <th>Email</th>
+                      <th>País</th>
+                      <th>Mensaje</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {contactos.length === 0 ? (
+                      <tr>
+                        <td colSpan={5} className="text-center text-muted">
+                          No hay contactos aún.
+                        </td>
+                      </tr>
+                    ) : (
+                      contactos.map((c, i) => (
+                        <tr key={i}>
+                          <td>{c.nombre}</td>
+                          <td>{c.telefono}</td>
+                          <td>{c.email}</td>
+                          <td>{c.pais}</td>
+                          <td>{c.mensaje}</td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
