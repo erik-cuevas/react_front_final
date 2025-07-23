@@ -19,6 +19,7 @@ export default function ContactUs() {
   });
 
   const [contactos, setContactos] = useState<Contacto[]>([]);
+  const [editIndex, setEditIndex] = useState<number | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.id]: e.target.value });
@@ -26,15 +27,32 @@ export default function ContactUs() {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    setContactos([...contactos, form]);
+    if (editIndex !== null) {
+      const nuevos = [...contactos];
+      nuevos[editIndex] = form;
+      setContactos(nuevos);
+      setEditIndex(null);
+    } else {
+      setContactos([...contactos, form]);
+    }
     setForm({ nombre: '', telefono: '', email: '', pais: '', mensaje: '' });
+  };
+
+  const handleEdit = (index: number) => {
+    setForm(contactos[index]);
+    setEditIndex(index);
+  };
+
+  const handleDelete = (index: number) => {
+    const nuevos = contactos.filter((_, i) => i !== index);
+    setContactos(nuevos);
+    if (editIndex === index) setEditIndex(null);
   };
 
   return (
     <div className="container my-5">
       <h2 className="text-center mb-5">Contáctanos</h2>
       <div className="row">
-        {/* Formulario */}
         <div className="col-lg-6 mb-4">
           <div className="card shadow-sm h-100">
             <div className="card-body">
@@ -65,13 +83,14 @@ export default function ContactUs() {
                   <label htmlFor="mensaje">Mensaje</label>
                   <textarea className="form-control" id="mensaje" rows={4} value={form.mensaje} onChange={handleChange} required></textarea>
                 </div>
-                <button type="submit" className="btn btn-success">Enviar</button>
+                <button type="submit" className="btn btn-success">
+                  {editIndex !== null ? 'Actualizar' : 'Enviar'}
+                </button>
               </form>
             </div>
           </div>
         </div>
 
-        {/* Mapa */}
         <div className="col-lg-6 mb-4">
           <div className="card shadow-sm h-100">
             <div className="card-body">
@@ -93,7 +112,6 @@ export default function ContactUs() {
         </div>
       </div>
 
-      {/* Tabla de contactos */}
       <div className="row mt-4">
         <div className="col-12">
           <div className="card shadow-sm">
@@ -108,12 +126,13 @@ export default function ContactUs() {
                       <th>Email</th>
                       <th>País</th>
                       <th>Mensaje</th>
+                      <th>Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
                     {contactos.length === 0 ? (
                       <tr>
-                        <td colSpan={5} className="text-center text-muted">
+                        <td colSpan={6} className="text-center text-muted">
                           No hay contactos aún.
                         </td>
                       </tr>
@@ -125,6 +144,14 @@ export default function ContactUs() {
                           <td>{c.email}</td>
                           <td>{c.pais}</td>
                           <td>{c.mensaje}</td>
+                          <td>
+                            <button className="btn btn-sm btn-primary mr-2" onClick={() => handleEdit(i)}>
+                              Editar
+                            </button>
+                            <button className="btn btn-sm btn-danger" onClick={() => handleDelete(i)}>
+                              Eliminar
+                            </button>
+                          </td>
                         </tr>
                       ))
                     )}
